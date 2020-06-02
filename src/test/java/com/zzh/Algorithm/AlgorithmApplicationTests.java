@@ -1,10 +1,10 @@
-package com.zzh.dfa;
+package com.zzh.Algorithm;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class DfaApplicationTests {
+class AlgorithmApplicationTests {
 
 	@Test
 	void contextLoads() {

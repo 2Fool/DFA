@@ -1,13 +1,13 @@
-package com.zzh.dfa;
+package com.zzh.Algorithm;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class DfaApplication {
+public class AlgorithmApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(DfaApplication.class, args);
+		SpringApplication.run(AlgorithmApplication.class, args);
 	}
 
 }
