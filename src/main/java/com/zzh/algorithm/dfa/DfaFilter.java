@@ -10,9 +10,11 @@ public class DfaFilter {
 
     /**
      * 敏感词匹配规则
+     * MinMatchTYpe 最小匹配规则，如：敏感词库["中国","中国人"]，语句："我是中国人"，匹配结果：我是[中国]人
+     * MaxMatchType 最大匹配规则，如：敏感词库["中国","中国人"]，语句："我是中国人"，匹配结果：我是[中国人]
      */
-    public static final int MinMatchTYpe = 1;      //最小匹配规则，如：敏感词库["中国","中国人"]，语句："我是中国人"，匹配结果：我是[中国]人
-    public static final int MaxMatchType = 2;      //最大匹配规则，如：敏感词库["中国","中国人"]，语句："我是中国人"，匹配结果：我是[中国人]
+    public static final int MinMatchTYpe = 1;
+    public static final int MaxMatchType = 2;
 
     public class DFANode {
         HashMap<Character, DFANode> data;
@@ -40,8 +42,8 @@ public class DfaFilter {
     /**
      * 使用敏感词Set构造一个Filter
      *
-     * @param sensitiveWordSet
-     * @return
+     * @param sensitiveWordSet 构造词库
+     * @return DfaFilter
      */
     public static DfaFilter fromWordSet(Set<String> sensitiveWordSet) {
         DfaFilter dfaFilter = new DfaFilter();
@@ -61,12 +63,12 @@ public class DfaFilter {
      * @return
      */
     private static String getReplaceChars(char replaceChar, int length) {
-        String resultReplace = String.valueOf(replaceChar);
+        StringBuilder resultReplace = new StringBuilder(String.valueOf(replaceChar));
         for (int i = 1; i < length; i++) {
-            resultReplace += replaceChar;
+            resultReplace.append(replaceChar);
         }
 
-        return resultReplace;
+        return resultReplace.toString();
     }
 
     /**
@@ -91,10 +93,9 @@ public class DfaFilter {
         DFANode nowMap;
         DFANode newWorMap;
         //迭代sensitiveWordSet
-        Iterator<String> iterator = sensitiveWordSet.iterator();
-        while (iterator.hasNext()) {
+        for (String s : sensitiveWordSet) {
             // 一个关键字
-            key = iterator.next();
+            key = s;
             nowMap = sensitiveWordMapRoot;
             for (int i = 0; i < key.length(); i++) {
 
