@@ -38,7 +38,7 @@ public class SymmetricEncryption {
             cipher.init(Cipher.ENCRYPT_MODE, secretKey, random);
             //正式执行加密操作
 //            return Base64.encodeBase64String(cipher.doFinal(dataSource));
-            return dataSource.toString();
+            return Base64.getEncoder().encodeToString(cipher.doFinal(dataSource));
         } catch (Throwable e) {
             e.printStackTrace();
         }
@@ -61,7 +61,7 @@ public class SymmetricEncryption {
         cipher.init(Cipher.DECRYPT_MODE, secretKey, random);
         // 真正开始解密操作
 //        return new String(cipher.doFinal(Base64.decodeBase64(src)));
-        return src.toString();
+        return new String(cipher.doFinal(Base64.getDecoder().decode(src)));
     }
 
     /**
@@ -118,7 +118,7 @@ public class SymmetricEncryption {
      * 这里顺便提一句这个位指的是bit。
      * 推荐使用对称加密算法有：AES128、AES192、AES256。
      */
-    private static final String defaultCharset = "UTF-8";
+    private static final String DEFAULT_CHARSET = "UTF-8";
     private static final String KEY_AES = "AES";
     private static final String KEY_MD5 = "MD5";
     private static MessageDigest md5Digest;
@@ -126,7 +126,7 @@ public class SymmetricEncryption {
     static {
         try {
             md5Digest = MessageDigest.getInstance(KEY_MD5);
-        } catch (NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException ignored) {
 
         }
     }
@@ -154,21 +154,23 @@ public class SymmetricEncryption {
             boolean encrypt = mode == Cipher.ENCRYPT_MODE;
             byte[] content;
             if (encrypt) {
-                content = data.getBytes(defaultCharset);
+                content = data.getBytes(DEFAULT_CHARSET);
             } else {
 //                content = Base64.decodeBase64(data.getBytes());
                 content = java.util.Base64.getDecoder().decode(data.getBytes());
             }
-            SecretKeySpec keySpec = new SecretKeySpec(md5Digest.digest(key.getBytes(defaultCharset))
+            SecretKeySpec keySpec = new SecretKeySpec(md5Digest.digest(key.getBytes(DEFAULT_CHARSET))
                     , KEY_AES);
-            Cipher cipher = Cipher.getInstance(KEY_AES);// 创建密码器
-            cipher.init(mode, keySpec);// 初始化
+            // 创建密码器
+            Cipher cipher = Cipher.getInstance(KEY_AES);
+            // 初始化
+            cipher.init(mode, keySpec);
             byte[] result = cipher.doFinal(content);
             if (encrypt) {
 //                return new String(Base64.encodeBase64(result));
                 return Base64.getEncoder().encodeToString(result);
             } else {
-                return new String(result, defaultCharset);
+                return new String(result, DEFAULT_CHARSET);
             }
         } catch (Exception e) {
         }
