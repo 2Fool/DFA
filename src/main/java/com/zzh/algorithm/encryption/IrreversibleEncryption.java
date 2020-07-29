@@ -1,7 +1,12 @@
 package com.zzh.algorithm.encryption;
 
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 /**
  * 常见的不可逆加密算法有MD5，HMAC，SHA1、SHA-224、SHA-256、SHA-384，和SHA-512，其中SHA-224、SHA-256、SHA-384，
@@ -57,5 +62,33 @@ public class IrreversibleEncryption {
         }
         byte[] bytes = messageDigest.digest(text.getBytes());
         return Hex.encodeHexString(bytes);
+    }
+
+    /**
+     * HMAC是密钥相关的哈希运算消息认证码（Hash-based Message Authentication  Code）的缩写，
+     * 由H.Krawezyk，M.Bellare，R.Canetti于1996年提出的一种基于Hash函数和密钥进行消息认证的方法，并于1997年作为RFC2104被公布，
+     * 并在IPSec和其他网络协议（如SSL）中得以广泛应用，现在已经成为事实上的Internet安全标准。它可以与任何迭代散列函数捆绑使用。
+     * HMAC算法更像是一种加密算法，它引入了密钥，其安全性已经不完全依赖于所使用的Hash算法
+     *
+     * @param text 输入信息
+     * @param sk   密钥
+     * @return 加密串
+     */
+    public static String hmacSha256(String text, SecretKeySpec sk) {
+        Mac mac = null;
+        try {
+            mac = Mac.getInstance("HmacSHA256");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
+        }
+        try {
+            mac.init(sk);
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        }
+        byte[] rawHmac = mac.doFinal(text.getBytes());
+//        return new String(org.apache.commons.codec.binary.Base64.encodeBase64(rawHmac));
+        return new String(Base64.getEncoder().encode(rawHmac));
     }
 }
