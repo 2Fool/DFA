@@ -6,6 +6,7 @@ import java.util.Base64;
 /**
  * new String(Base64.encodeBase64(bytes[])) = java.util.Base64.getEncoder().encodeToString((bytes[]))
  * new String(Base64.decodeBase64(bytes[])) = java.util.Base64.getDecoder().decode(bytes)
+ * java8 自带拥有了base64 https://blog.csdn.net/iamlihongwei/article/details/97793114
  *
  * @Author: yuhui.guan
  * @Date: 2020/7/29 17:30
